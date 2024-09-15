@@ -1,0 +1,14 @@
+C:\Users\hungt\Desktop\Practice\ProblemSolving\obj\Debug\net7.0\ProblemSolving.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\hungt\Desktop\Practice\ProblemSolving\obj\Debug\net7.0\ProblemSolving.AssemblyInfoInputs.cache
+C:\Users\hungt\Desktop\Practice\ProblemSolving\obj\Debug\net7.0\ProblemSolving.AssemblyInfo.cs
+C:\Users\hungt\Desktop\Practice\ProblemSolving\obj\Debug\net7.0\ProblemSolving.csproj.CoreCompileInputs.cache
+C:\Users\hungt\Desktop\Practice\ProblemSolving\bin\Debug\net7.0\ProblemSolving.exe
+C:\Users\hungt\Desktop\Practice\ProblemSolving\bin\Debug\net7.0\ProblemSolving.deps.json
+C:\Users\hungt\Desktop\Practice\ProblemSolving\bin\Debug\net7.0\ProblemSolving.runtimeconfig.json
+C:\Users\hungt\Desktop\Practice\ProblemSolving\bin\Debug\net7.0\ProblemSolving.dll
+C:\Users\hungt\Desktop\Practice\ProblemSolving\bin\Debug\net7.0\ProblemSolving.pdb
+C:\Users\hungt\Desktop\Practice\ProblemSolving\obj\Debug\net7.0\ProblemSolving.dll
+C:\Users\hungt\Desktop\Practice\ProblemSolving\obj\Debug\net7.0\refint\ProblemSolving.dll
+C:\Users\hungt\Desktop\Practice\ProblemSolving\obj\Debug\net7.0\ProblemSolving.pdb
+C:\Users\hungt\Desktop\Practice\ProblemSolving\obj\Debug\net7.0\ProblemSolving.genruntimeconfig.cache
+C:\Users\hungt\Desktop\Practice\ProblemSolving\obj\Debug\net7.0\ref\ProblemSolving.dll
