@@ -1,5 +1,9 @@
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Queue;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.Stack;
 
 public class FindIfPathExistInGraph {
@@ -40,6 +44,18 @@ Given edges and the integers n, source, and destination, return true if there is
             }
         }
         return false;
+    }
+    public boolean validPathBFS(int n, int[][] edges, int source, int destination){
+        List<List<Integer>> graph = new ArrayList<>();
+        for(int i = 0; i < n; i++){
+            graph.add(new ArrayList<>());
+        }
+        for(int[] e: edges){
+            graph.get(e[0]).add(e[1]);
+            graph.get(e[1]).add(e[0]);
+        }
+        Queue<Integer> queue = new LinkedList<>();
+        
     }
     public static void main(String[] args) {
         
