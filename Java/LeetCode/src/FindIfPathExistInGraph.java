@@ -36,6 +36,7 @@ Given edges and the integers n, source, and destination, return true if there is
             int curr = stack.pop();
             visited.add(curr);
             for(int item: map.get(curr)){
+                if(item == destination) return true;
                 if(!visited.contains(item)){
                     visited.add(item);
                     stack.add(item);
@@ -55,7 +56,20 @@ Given edges and the integers n, source, and destination, return true if there is
             graph.get(e[1]).add(e[0]);
         }
         Queue<Integer> queue = new LinkedList<>();
-        
+        boolean[] visited = new boolean[n];
+        visited[source] = true;
+        queue.add(source);
+        while(!queue.isEmpty()){
+            int curr = queue.poll();
+            if(curr == destination) return true;
+            for(int link: graph.get(curr)){
+                if(!visited[link]){
+                    visited[link] = true;
+                    queue.add(link);
+                }
+            }
+        }
+        return false;
     }
     public static void main(String[] args) {
         
