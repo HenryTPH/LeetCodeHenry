@@ -34,7 +34,7 @@ The height of a rooted tree is the number of edges on the longest downward path 
             if(!visited.contains(i)){
                 visited.add(i);
                 if(graph.get(i).size() != 0){
-                    count = 1 + countHeight(i, graph, new ArrayList<>(visited));                
+                    count = Math.max(count, 1 + countHeight(i, graph, new ArrayList<>(visited)));                
                 }
             }
             
@@ -57,7 +57,7 @@ The height of a rooted tree is the number of edges on the longest downward path 
         return rs;
     }
     public static void main(String[] args) {
-        int[][] arr = {{1,0},{1,2},{1,3}};
-        System.out.println(findMinHeightTrees(4, arr));
+        int[][] arr = {{3,0},{3,1},{3,2},{3,4},{5,4}};
+        System.out.println(findMinHeightTrees(6, arr));
     }
 }
