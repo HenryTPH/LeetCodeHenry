@@ -46,7 +46,11 @@ The height of a rooted tree is the number of edges on the longest downward path 
         List<Integer> heightOfNodes = new ArrayList<>();
         List<Integer> rs = new ArrayList<>();
         for(int i = 0; i < n; i++){
-            heightOfNodes.add(countHeight(i, graph, new ArrayList<>()));
+            if(graph.get(i).size() < 1){
+                heightOfNodes.add(Integer.MAX_VALUE);
+            } else {
+                heightOfNodes.add(countHeight(i, graph, new ArrayList<>()));
+            }            
         }
         int minHeight = Collections.min(heightOfNodes);
         for(int i = 0; i < heightOfNodes.size(); i++){
