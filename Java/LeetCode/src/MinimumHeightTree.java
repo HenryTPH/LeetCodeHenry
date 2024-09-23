@@ -1,5 +1,8 @@
+import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.Deque;
 import java.util.List;
 
 public class MinimumHeightTree {
@@ -60,8 +63,35 @@ The height of a rooted tree is the number of edges on the longest downward path 
         }
         return rs;
     }
+    public static List<Integer> findMinHeightTreesBFS(int n, int[][] edges){
+        if(n == 1) return Arrays.asList(0);
+        List<List<Integer>> graph = createUndirectedGraph(edges, n);
+        List<Integer> edgeCount = new ArrayList<>();
+        Deque<Integer> leaves = new ArrayDeque<>();
+        for(int i = 0; i < n; i++){
+            edgeCount.add(graph.get(i).size());
+            if (edgeCount.get(i) == 1) {
+                leaves.add(i);
+            }
+        }
+        while(!leaves.isEmpty()){
+            if(n <= 2) return new ArrayList<>(leaves);
+            int leavesSize = leaves.size();
+            n -= leavesSize;
+            for(int i = 0; i < leavesSize; i++){
+                int node = leaves.pollFirst();
+                for(int j: graph.get(node)){
+                    edgeCount.set(j,edgeCount.get(j) - 1);
+                    if(edgeCount.get(j) == 1){
+                        leaves.add(j);
+                    }
+                }
+            }
+        }
+        return new ArrayList<>();
+    }
     public static void main(String[] args) {
         int[][] arr = {{3,0},{3,1},{3,2},{3,4},{5,4}};
-        System.out.println(findMinHeightTrees(6, arr));
+        System.out.println(findMinHeightTreesBFS(6, arr));
     }
 }
