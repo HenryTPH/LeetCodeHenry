@@ -9,7 +9,26 @@ Return an edge that can be removed so that the resulting graph is a tree of n no
      * @return
      */
     public int[] findRedundantConnection(int[][] edges){
-
+        int[] parent = new int[edges.length+1];
+        for(int i = 0; i < parent.length; i++) parent[i] = i;
+        for(int[] edge: edges){
+            if(find(edge[0], parent) == find(edge[1], parent)) return edge;
+            union(edge[0], edge[1], parent);
+        }
+        return null;
+    }
+    public int find(int node, int[] parent){
+        while(parent[node] != node){
+            node = parent[node];
+        }
+        return node;
+    }
+    public void union(int nodeA, int nodeB, int[] parent){
+        int rootA = find(nodeA, parent);
+        int rootB = find(nodeB, parent);
+        if(rootA != rootB){
+            parent[rootB] = rootA;
+        }
     }
     public static void main(String[] args) {
         
