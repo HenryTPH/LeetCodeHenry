@@ -16,6 +16,13 @@ import java.util.stream.IntStream;
 1631. Path With Minimum Effort
 2812. Find the Safest Path in a Grid
 2642. Design Graph With Shortest Path Calculator
+Solve those problem below: https://leetcode.com/problems/network-delay-time/solutions/2310813/dijkstra-s-algorithm-template-list-of-problems
+1514. Path with Maximum Probability
+787. Cheapest Flights Within K Stops
+1584. Min Cost to Connect All Points
+1976. Number of Ways to Arrive at Destination
+1334. Find the City with the Smallest Number of Neighbors at THreshold Distance
+
  */
 
 public class NetworkDelayTime {
@@ -66,7 +73,34 @@ We will send a signal from a given node k. Return the minimum time it takes for 
         }
         return count == Integer.MAX_VALUE ? -1:count;
     }
+    public static int networkDelayTimeBFS(int[][] times, int n, int k){
+        int[] result = new int[n+1];
+        int max = Integer.MAX_VALUE;
+        Arrays.fill(result, max);
+        result[k] = 0;
+        for(int i = 0; i < n-1; i++){
+            boolean found = false;
+            for(int[] time: times){
+                int src = time[0];
+                int dest = time[1];
+                int weight = time[2];
+                if(result[src] == max) continue;
+                if(result[src] + weight < result[dest]){
+                    found = true;
+                    result[dest] = result[src] + weight;
+                }
+            }
+            if(!found) break;
+        }
+        int answer = -1;
+        for(int i = 1; i < n+1; i++){
+            if(result[i] == max) return -1;
+            answer = Math.max(answer, result[i]);
+        }
+        return answer;
+    }
     public static void main(String[] args) {
-        
+        int[][] times = {{2,1,1},{2,3,1},{3,4,1}};
+        System.out.println(networkDelayTimeBFS(times, 4, 2));
     }
 }
