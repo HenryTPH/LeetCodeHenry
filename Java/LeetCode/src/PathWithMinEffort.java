@@ -1,3 +1,4 @@
+import java.util.Arrays;
 import java.util.PriorityQueue;
 
 public class PathWithMinEffort {
@@ -42,6 +43,45 @@ Return the minimum effort required to travel from the top-left cell to the botto
             }
         }
         return -1;
+    }
+    // This is the solution from LeetCode using DFS
+    public int minimumEffortPathDFS(int[][] heights){
+        int rows = heights.length;
+        int cols = heights[0].length;
+        int[] directions_x = {0, 1, -1, 0};
+        int[] directions_y = {1, 0, 0, -1};
+        boolean[][] visited = new boolean[rows][cols];
+        int lowerLimit = 0;
+        int upperLimit = Integer.MAX_VALUE;
+        while(lowerLimit < upperLimit){
+            int mid = (upperLimit + lowerLimit)/2;
+            for(boolean[] row: visited){
+                Arrays.fill(row, false);
+            }
+            dfs(0, 0, mid, heights, visited, rows, cols, directions_x, directions_y);
+            if(visited[rows - 1][cols - 1]){
+                upperLimit = mid;
+            } else {
+                lowerLimit = mid + 1;
+            }
+        }
+        return lowerLimit;
+    }
+    private void dfs(int x, int y, int limitEffort, int[][] heights, boolean[][] visited, int rows, int cols, int[] directions_x, int[] directions_y){
+        if(visited[x][y]) return;
+        visited[x][y] = true;
+        if(x == rows - 1 && y == cols - 1) return;
+        for(int i = 0; i < 4; i++){
+            int newX = x + directions_x[i];
+            int newY = y + directions_y[i];
+            if(newX < 0 || newX >= rows || newY < 0 || newY >= cols){
+                continue;
+            }
+            int newEffort = Math.abs(heights[x][y] - heights[newX][newY]);
+            if(newEffort <= limitEffort){
+                dfs(newX, newY, limitEffort, heights, visited, rows, cols, directions_x, directions_y);
+            }
+        }
     }
     public static void main(String[] args) {
         int[][] heights = {{1,2,2}, {3,8,2}, {5,3,5}};
