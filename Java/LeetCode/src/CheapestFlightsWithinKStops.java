@@ -1,7 +1,9 @@
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.PriorityQueue;
 import java.util.Queue;
 
 public class CheapestFlightsWithinKStops {
@@ -16,7 +18,7 @@ You are also given three integers src, dst, and k, return the cheapest price fro
      * @param k
      * @return
      */
-    public static int findCheapestPrice(int n, int[][] flights, int src, int dst, int k){
+    public static int findCheapestPriceMySolution(int n, int[][] flights, int src, int dst, int k){
         List<List<int[]>> graph = new ArrayList<>();
         for(int i = 0; i < n; i++){
             graph.add(new ArrayList<>());
@@ -52,6 +54,52 @@ You are also given three integers src, dst, and k, return the cheapest price fro
             }
         }
         return totalCost.isEmpty() ? -1 : Collections.min(totalCost);
+    }
+    public int findCheapestPrice(int n, int[][] flights, int src, int dst, int k) {
+        List<List<int[]>> graph = new ArrayList<>();
+        for (int i = 0; i < n; i++) {
+            graph.add(new ArrayList<>());
+        }
+
+        for (int[] flight : flights) {
+            int from = flight[0];
+            int to = flight[1];
+            int cost = flight[2];
+            graph.get(from).add(new int[]{to, cost});
+        }
+        PriorityQueue<int[]> queue = new PriorityQueue<>((a, b) -> a[1] - b[1]);
+        queue.add(new int[]{src, 0, 0});
+        
+        int[][] minCost = new int[n][k + 2];
+        for (int i = 0; i < n; i++) {
+            Arrays.fill(minCost[i], Integer.MAX_VALUE);
+        }
+        minCost[src][0] = 0;
+
+        while (!queue.isEmpty()) {
+            int[] current = queue.poll();
+            int node = current[0];
+            int cost = current[1];
+            int count = current[2];
+            if (node == dst) {
+                return cost;
+            }
+            if (count > k) {
+                continue;
+            }
+            for (int[] neighbor : graph.get(node)) {
+                int nextNode = neighbor[0];
+                int nextCost = neighbor[1];
+                int totalCost = cost + nextCost;
+
+                if (totalCost < minCost[nextNode][count + 1]) {
+                    minCost[nextNode][count + 1] = totalCost;
+                    queue.add(new int[]{nextNode, totalCost, count + 1});
+                }
+            }
+        }
+        
+        return -1;
     }
     public static void main(String[] args) {
         int[][] case1 = {{0,1,100}, {1,2,100}, {2,0,100}, {1,3,600}, {2,3,200}};
