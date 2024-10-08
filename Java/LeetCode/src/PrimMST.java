@@ -1,3 +1,9 @@
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.List;
+import java.util.PriorityQueue;
+
 public class PrimMST {
     private static final int V = 5;
 
@@ -69,6 +75,84 @@ public class PrimMST {
             }            
         }
         printMST(parent, graph);
+    }
+    /*
+     * Optimization using PQ
+     */
+    class iPair{
+        int first, second;
+        public iPair(int first, int second){
+            this.first = first;
+            this.second = second;
+        }
+    }
+    class Graph{
+        int V;
+        List<List<iPair>> adj;
+        public Graph(int V){
+            this.V = V;
+            adj = new ArrayList<>();
+            for(int i = 0; i < V; i++){
+                adj.add(new ArrayList<>());
+            }
+        }
+        void addEdge(int u, int v, int weight){
+            adj.get(u).add(new iPair(v, weight));
+            adj.get(v).add(new iPair(u, weight));
+        }
+        void primMST(){
+            // A priority queue to store vertices that are being primMST
+            PriorityQueue<iPair> pq = new PriorityQueue<>(V, new Comparator<iPair>() {
+                public int compare(iPair a, iPair b){
+                    return a.second - b.second;
+                }
+            });
+            int src = 0;
+            // Create a vector for keys and initialize all keys as infinite
+            int INF = Integer.MAX_VALUE;
+            int[] key = new int[V];
+            Arrays.fill(key, INF);
+            // Store parent array which in turn store MST
+            int[] parent = new int[V];
+            Arrays.fill(parent, -1);
+            // Keep track of vertices included in MST
+            boolean[] inMST = new boolean[V];
+            // Insert source itself in priority queue and initialize its key as 0
+            pq.offer(new iPair(0, src));
+            key[src] = 0;
+            while(!pq.isEmpty()){
+                /*
+                 * The first vertex in pair is the minimum key vertex, extract it from pq
+                 * Vertex label is stored in second pf pair (it has to be done this way to
+                 * keep the vertices sorted key - key must be first item in pair)
+                 */
+                int u = pq.peek().second;
+                pq.poll();
+                /*
+                 * Different key values for same vertex may exist in the priority queue. The one
+                 * with the least key value is always processed first.
+                 * Therefore, ignore the rest.
+                 */
+                if(inMST[u]) continue;
+                inMST[u] = true;
+                for(iPair i: adj.get(u)){
+                    int v = i.first;
+                    int weight = i.second;
+                    /*
+                     * If v is not in MST and weight of (u,v) is smaller than the current key of V
+                     */
+                    if(!inMST[v] && weight < key[v]){
+                        // updating key of V
+                        key[v] = weight;
+                        pq.offer(new iPair(key[v], v));
+                        parent[v] = u;
+                    }
+                }
+            }
+            for(int i = 1; i < V; i++){
+                System.out.println(parent[i] + " - " + i);
+            }
+        }
     }
     public static void main(String[] args) {
         PrimMST t = new PrimMST();
