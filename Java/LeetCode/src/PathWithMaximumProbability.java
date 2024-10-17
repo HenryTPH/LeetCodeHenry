@@ -38,7 +38,7 @@ If there is no path from start to end, return 0. Your answer will be accepted if
             this.prob = prob;
         }        
     }
-    public double maxProbability(int n, int[][] edges, double[] succProb, int start_node, int end_node){
+    public double maxProbabilityDijkstraAlgorithm(int n, int[][] edges, double[] succProb, int start_node, int end_node){
         LinkedList<Edge>[] list = new LinkedList[n];
         for(int i = 0; i < n; i++){
             list[i] = new LinkedList<>();
@@ -71,6 +71,35 @@ If there is no path from start to end, return 0. Your answer will be accepted if
             }
         }
         return distances[end_node];
+    }
+    /*
+     * Bellman-Ford algorithm
+     * 1. Initialize dist[] holds the max prob to reach node i from the start node. Set dist[start] = 1
+     * 2. Perform up to n-1 iterations, where n is the number of nodes. Check each edge and update the probability of reaching the neighboring nodes.
+     * 3. For each edge (u, v), if the probability of reaching v through u is greater than the current known probability to reach v, update dist[v].Similarly, update dist[u] if the probability of reaching u through v is greater
+     * 4. After completing the iterations, dist[end] will contain the maximum probability of reaching the end node from the start node. If there's no path, it will remain 0.
+     */
+    public double maxProbability(int n, int[][] edges, double[] succProb, int start_node, int end_node){
+        double[] maxProb = new double[n];
+        maxProb[start_node] = 1.0;
+        for(int i = 0; i < n-1; i++){
+            boolean updated = false;
+            for(int j = 0; j < edges.length; j++){
+                int u = edges[j][0];
+                int v = edges[j][1];
+                double prob = succProb[j];
+                if(maxProb[u] * prob > maxProb[v]){
+                    maxProb[v] = maxProb[u] * prob;
+                    updated = true;
+                }
+                if(maxProb[v] * prob > maxProb[u]){
+                    maxProb[u] = maxProb[v] * prob;
+                    updated = true;
+                }
+            }
+            if(!updated) break;
+        }
+        return maxProb[end_node];
     }
     public static void main(String[] args) {
         
