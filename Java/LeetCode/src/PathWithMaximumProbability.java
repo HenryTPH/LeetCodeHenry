@@ -2,6 +2,7 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.PriorityQueue;
+import java.util.ArrayList;
 
 public class PathWithMaximumProbability {
     /*
@@ -39,29 +40,26 @@ If there is no path from start to end, return 0. Your answer will be accepted if
         }        
     }
     public double maxProbabilityDijkstraAlgorithm(int n, int[][] edges, double[] succProb, int start_node, int end_node){
-        LinkedList<Edge>[] list = new LinkedList[n];
+        ArrayList<ArrayList<Edge>> list = new ArrayList<>();
         for(int i = 0; i < n; i++){
-            list[i] = new LinkedList<>();
+            list.add(new ArrayList<>());
         }
         for(int e = 0; e < edges.length; e++){
             int src = edges[e][0];
             int dest = edges[e][1];
             double prob = succProb[e];
-            list[src].add(new Edge(dest, prob));
-            list[dest].add(new Edge(src, prob));
+            list.get(src).add(new Edge(dest, prob));
+            list.get(dest).add(new Edge(src, prob));
         }
         PriorityQueue<Edge> pq = new PriorityQueue<>(n, Comparator.comparingDouble(e -> e.prob));
-        // boolean[] visited = new boolean[n];
         double[] distances = new double[n];
         Arrays.fill(distances, 0);
         distances[start_node] = 1;
-        pq.add(new Edge(start_node, 0));
+        pq.add(new Edge(start_node, 1.0));
         while(!pq.isEmpty()){
             Edge curr = pq.poll();
             int currentVertex = curr.node;
-            // if(visited[currentVertex]) continue;
-            // visited[currentVertex] = true;
-            for(Edge e: list[currentVertex]){
+            for(Edge e: list.get(currentVertex)){
                 int neighbor = e.node;
                 double newProb = e.prob * distances[currentVertex];
                 if(Double.compare(newProb,distances[neighbor]) > 0){
@@ -79,7 +77,7 @@ If there is no path from start to end, return 0. Your answer will be accepted if
      * 3. For each edge (u, v), if the probability of reaching v through u is greater than the current known probability to reach v, update dist[v].Similarly, update dist[u] if the probability of reaching u through v is greater
      * 4. After completing the iterations, dist[end] will contain the maximum probability of reaching the end node from the start node. If there's no path, it will remain 0.
      */
-    public double maxProbability(int n, int[][] edges, double[] succProb, int start_node, int end_node){
+    public double maxProbabilityWithBellmanFord(int n, int[][] edges, double[] succProb, int start_node, int end_node){
         double[] maxProb = new double[n];
         maxProb[start_node] = 1.0;
         for(int i = 0; i < n-1; i++){
@@ -100,6 +98,30 @@ If there is no path from start to end, return 0. Your answer will be accepted if
             if(!updated) break;
         }
         return maxProb[end_node];
+    }
+    public double maxProbabilityWithKijkstraAlgorithm(int n, int[][] edges, double[] succProb, int start_node, int end_node){
+        ArrayList<ArrayList<Edge>> graph = new ArrayList<>();
+        for(int i = 0; i < n; i++){
+            graph.add(new ArrayList<>());
+        }
+        for(int i = 0; i< succProb.length; i++){
+            graph.get(edges[i][0]).add(new Edge(edges[i][1], succProb[i]));
+            graph.get(edges[i][1]).add(new Edge(edges[i][0], succProb[i]));
+        }
+        double[] dist = new double[n];
+        dist[start_node] = 1.0;
+        PriorityQueue<Edge> pq = new PriorityQueue<>((a, b) -> Double.compare(b.prob, a.prob));
+        pq.add(new Edge(start_node, 1.0));
+        while(!pq.isEmpty()){
+            Edge e = pq.poll();
+            for(Edge neighbor: graph.get(e.node)){
+                if(dist[neighbor.node] < dist[e.node] * neighbor.prob){
+                    dist[neighbor.node] = dist[e.node] * neighbor.prob;
+                    pq.add(new Edge(neighbor.node, dist[e.node]));
+                }
+            }
+        }
+        return dist[end_node];
     }
     public static void main(String[] args) {
         
