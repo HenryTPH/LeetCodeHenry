@@ -29,6 +29,7 @@ public class DetonateTheMaxBombs {
         int[] bombArr = new int[bombs.length];
         for(int i = 0; i < bombs.length; i++){
             bombArr[i] = DFSHelper(graph, i, new boolean[bombs.length]);
+            if(bombArr[i] == bombs.length) return bombs.length; // This will increase runtime to 97.54%
         }
         
         return Arrays.stream(bombArr).max().getAsInt();
