@@ -1,5 +1,7 @@
 import java.util.Stack;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 
 public class TopologicalSorting {
     static void topologicalSort(List<List<Integer>> graph, int V){
@@ -28,6 +30,36 @@ public class TopologicalSorting {
             }
         }
         stack.push(vertex);
+    }
+
+    /*
+     * Topological Sorting using BFS - Kahn's Algorithm
+     */
+    public static int[] topologicalSortingBFS(List<List<Integer>> adj, int V){
+        int[] indegree = new int[V];
+        for(int i = 0; i < V; i++){
+            for(int it: adj.get(i)){
+                indegree[it]++;
+            }
+        }
+        Queue<Integer> queue = new LinkedList<>();
+        for(int i = 0; i < V; i++){
+            if(indegree[i] == 0) queue.add(i);
+        }
+        int[] rs = new int[V];
+        int index = 0;
+        while(!queue.isEmpty()){
+            int node = queue.poll();
+            rs[index++] = node;
+            for(int it: adj.get(node)){
+                if(--indegree[it] == 0) queue.add(it);
+            }
+        }
+        if(index != V){
+            System.out.println("Graph contains cycles!");
+            return new int[0];
+        }
+        return rs;
     }
     public static void main(String[] args) {
         
