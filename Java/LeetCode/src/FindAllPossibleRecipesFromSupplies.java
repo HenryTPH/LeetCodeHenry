@@ -1,7 +1,9 @@
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 import java.util.Stack;
 
 public class FindAllPossibleRecipesFromSupplies {
@@ -25,15 +27,16 @@ public class FindAllPossibleRecipesFromSupplies {
                 indegree.put(recipes[i], indegree.getOrDefault(recipes[i], 0) + 1);
             }
         }
-        for(int i=0;i<recipes.length;i++){
-            String item=recipes[i];
-            for(int j=0;j<ingredients.get(i).size();j++){
-                List<String> g=map.getOrDefault(ingredients.get(i).get(j),new ArrayList<>());
-                g.add(item);
-                map.put(ingredients.get(i).get(j),g);
-                indegree.put(item,indegree.getOrDefault(item,0)+1);
-            }
-        }
+        // Another way to create the map
+        //for(int i=0;i<recipes.length;i++){
+        //     String item=recipes[i];
+        //     for(int j=0;j<ingredients.get(i).size();j++){
+        //         List<String> g=map.getOrDefault(ingredients.get(i).get(j),new ArrayList<>());
+        //         g.add(item);
+        //         map.put(ingredients.get(i).get(j),g);
+        //         indegree.put(item,indegree.getOrDefault(item,0)+1);
+        //     }
+        // }
         
         List<String> result = new ArrayList<>();
         for(String str: supplies){
@@ -49,6 +52,40 @@ public class FindAllPossibleRecipesFromSupplies {
             indegree.put(product, indegree.getOrDefault(product, 0) - 1);
             if(indegree.getOrDefault(product, 0) <= 0) dfs(map, indegree, product);
         }
+    }
+    /*
+     * Use TopologicalSorting for this problem
+     */
+    public List<String> findAllRecipesTopo(String[] recipes, List<List<String>> ingredients, String[] supplies){
+        HashMap<String, List<String>> map = new HashMap<>();
+        HashMap<String, Integer> indegree = new HashMap<>();
+        List<String> result = new ArrayList<>();
+        for(int i = 0; i < recipes.length; i++){
+            for(String ingredient: ingredients.get(i)){
+                if(!map.containsKey(ingredient)){
+                    map.put(ingredient, new ArrayList<>(Arrays.asList(recipes[i])));
+                } else {
+                    map.get(ingredient).add(recipes[i]);                    
+                }
+                indegree.put(recipes[i], indegree.getOrDefault(recipes[i], 0) + 1);
+            }
+        }
+
+        Queue<String> queue = new LinkedList<>();
+        for(String s: supplies) queue.add(s);
+        while(!queue.isEmpty()){
+            String supply = queue.poll();
+            for(String product: map.getOrDefault(supply, new ArrayList<>())){
+                indegree.put(product, indegree.getOrDefault(product, 0) - 1);
+                if(indegree.getOrDefault(product, 0) <= 0){
+                    queue.add(product);
+                }
+            }
+        }
+        for(String s: indegree.keySet()){
+            if(indegree.getOrDefault(s, 0) <= 0) result.add(s);
+        }
+        return result;
     }
     public static void main(String[] args) {
         
