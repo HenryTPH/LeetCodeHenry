@@ -1,6 +1,7 @@
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
@@ -86,6 +87,48 @@ public class FindAllPossibleRecipesFromSupplies {
             if(indegree.getOrDefault(s, 0) <= 0) result.add(s);
         }
         return result;
+    }
+    /*
+     * More efficient using Topological Sort
+     */
+    public List<String> findAllRecipesEfficent(String[] recipes, List<List<String>> ingredients, String[] supplies) {
+        HashSet<String> supply = new HashSet<>();
+        HashMap<String, Integer> index = new HashMap<>();
+        HashMap<String, List<String>> map = new HashMap<>();
+        for(String s: supplies) supply.add(s);
+        for(int i = 0; i < recipes.length; i++){
+            index.put(recipes[i], i);
+        }
+        int[] indegree = new int[recipes.length];
+        for(int i = 0; i < recipes.length; i++){
+            for(String need: ingredients.get(i)){
+                if(supply.contains(need)) continue;
+                map.putIfAbsent(need, new ArrayList<>());
+                map.get(need).add(recipes[i]);
+                indegree[i]++;
+            }
+        }
+        LinkedList<Integer> q = new LinkedList<>();
+        for(int i = 0; i < recipes.length; i++){
+            if(indegree[i] == 0) q.add(i);
+        }
+        List<String> cooked = new ArrayList<>();
+        while(!q.isEmpty()){
+            int i = q.poll();
+            cooked.add(recipes[i]);
+            if(!map.containsKey(recipes[i])){
+                // if the map does not contain this recipe, this means
+                // this recipe is not an ingredient for any other recipe
+                // and no further processing is required
+                continue;
+            }
+            for(String recipe: map.get(recipes[i])){
+                if(--indegree[index.get(recipe)] == 0){
+                    q.add(index.get(recipe));
+                }
+            }
+        }
+        return cooked;
     }
     public static void main(String[] args) {
         
