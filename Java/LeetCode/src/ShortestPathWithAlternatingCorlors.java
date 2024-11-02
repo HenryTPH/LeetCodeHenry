@@ -61,7 +61,52 @@ Return an array answer of length n, where each answer[x] is the length of the sh
      * BFS solution but run faster
      */
     public int[] shortestAlternatingPathsSolution(int n, int[][] redEdges, int[][] blueEdges){
-        
+        List<List<Integer>> red = new ArrayList<>();
+        List<List<Integer>> blue = new ArrayList<>();
+        for(int i = 0; i < n; i++){
+            red.add(new ArrayList<>());
+            blue.add(new ArrayList<>());
+        }
+        for(int arr[]: redEdges){
+            red.get(arr[0]).add(arr[1]);
+        }
+        for(int arr[]: blueEdges){
+            blue.get(arr[0]).add(arr[1]);
+        }
+        int[] ans = new int[n];
+        Arrays.fill(ans, -1);
+        boolean[][] visited = new boolean[n][2];
+        Queue<Edge> queue = new LinkedList<>();
+        queue.add(new Edge(0, 1));
+        queue.add(new Edge(0, -1));
+        visited[0][0] = visited[0][1] = true;
+        ans[0] = 0;
+        int level = 0;
+        while(!queue.isEmpty()){
+            int size = queue.size();
+            level++;
+            while(size-- > 0){
+                Edge e = queue.poll();
+                if(e.color == 1) {
+                    for(int i: red.get(e.destination)){
+                        if(!visited[i][0]){
+                            queue.add(new Edge(i, 1));
+                            visited[i][0] = true;
+                            if(ans[i] == -1) ans[i] = level;
+                        }
+                    }
+                } else{
+                    for(int i: blue.get(e.destination)){
+                        if(!visited[i][1]){
+                            queue.add(new Edge(i, -1));
+                            visited[i][1] = true;
+                            if(ans[i] == -1) ans[i] = level;
+                        }
+                    }
+                }
+            }
+        }
+        return ans;
     }
     public static void main(String[] args) {
         
