@@ -57,6 +57,12 @@ Return an array answer of length n, where each answer[x] is the length of the sh
             this.color = color;
         }
     }
+    /*
+     * BFS solution but run faster
+     */
+    public int[] shortestAlternatingPathsSolution(int n, int[][] redEdges, int[][] blueEdges){
+        
+    }
     public static void main(String[] args) {
         
     }
