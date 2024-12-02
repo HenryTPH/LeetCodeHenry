@@ -1,4 +1,7 @@
+import java.util.Arrays;
 import java.util.PriorityQueue;
+
+import javax.management.NotificationBroadcasterSupport;
 
 public class FindMinTimeToReachLastRoom {
     /*
@@ -54,6 +57,48 @@ Two rooms are adjacent if they share a common wall, either horizontally or verti
             pq.add(new int[]{new_x, new_y, moveTime[new_x][new_y]});
         }
         return result;
+    }
+
+    // Dijkstra's algorithm
+    static class Node{
+        int i, j;
+        long cost;
+
+        public Node(int i, int j, long cost){
+            this.i = i;
+            this.j = j;
+            this.cost = cost;
+        }
+    }
+    public static int minTimeToReachDIJ(int[][] moveTime){
+        PriorityQueue<Node> pq = new PriorityQueue<>((n, m) -> Long.compare(n.cost, m.cost));
+        int n = moveTime.length;
+        int m = moveTime[0].length;        
+        boolean[][] visited = new boolean[n][m];
+        long[][] distance = new long[n][m];
+        for(int i = 0; i < n; i++){
+            Arrays.fill(distance[i], Long.MAX_VALUE);
+        }
+        pq.add(new Node(0, 0, 0));
+        while(!pq.isEmpty()){
+            Node curr = pq.poll();
+            if(curr.i == n-1 && curr.j == m-1){
+                return (int) distance[curr.i][curr.j];
+            }
+            if(visited[curr.i][curr.j]) continue;
+            visited[curr.i][curr.j] = true;
+            int directions[][] = {{1,0},{0,1},{-1,0},{0,-1}};
+            for(int i = 0; i < directions.length; i++){
+                int k = curr.i + directions[i][0];
+                int l = curr.j + directions[i][1];
+                if(k >= 0 && k < n && l >= 0 && l < m){
+                    long costToNode = Math.min(Math.max(curr.cost, moveTime[k][l]) + 1, distance[k][l]);
+                    distance[k][l] = costToNode;
+                    pq.add(new Node(k, l, costToNode));
+                }
+            }
+        }
+        return Integer.MAX_VALUE;
     }
     public static void main(String[] args) {
         int[][] moveTime = {{0,0,0},{0,0,0}};
